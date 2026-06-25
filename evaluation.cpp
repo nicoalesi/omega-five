@@ -13,7 +13,7 @@ const int WEIGHTS[10][10] = {
     {0, 1, 2, 3, 4, 4, 3, 2, 1, 0},
 };
 
-const int FIVES_SCORE = 10000000;
-const int OPEN_FOURS_SCORE = 100000;
-const int FOURS_SCORE = 10000;
-const int THREES_SCORE = 1000;
+const int FIVES_SCORE = 3000;
+const int OPEN_FOURS_SCORE = 1500;
+const int FOURS_SCORE = 400;
+const int THREES_SCORE = 150;
