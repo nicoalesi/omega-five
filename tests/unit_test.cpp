@@ -443,10 +443,10 @@ bool test_count_fours () {
     if (!test_column_four()) return false;
     if (!test_diagonal_four()) return false;
     if (!test_antidiagonal_four()) return false;
-    if (!test_row_open_four_is_ignored()) false;
-    if (!test_column_open_four_is_ignored()) false;
-    if (!test_diagonal_open_four_is_ignored()) false;
-    if (!test_antidiagonal_open_four_is_ignored()) false;
+    if (!test_row_open_four_is_ignored()) return false;
+    if (!test_column_open_four_is_ignored()) return false;
+    if (!test_diagonal_open_four_is_ignored()) return false;
+    if (!test_antidiagonal_open_four_is_ignored()) return false;
     if (!test_blocked_row_four()) return false;
     if (!test_blocked_column_four()) return false;
     if (!test_blocked_diagonal_four()) return false;
@@ -828,7 +828,6 @@ bool test_antidiagonal_three () {
     setup_pieces(white, {72, 81, 90});
     if (count_threes(white) != 1) return false;
 
-    // anchor=40, piece:40 piece:31 piece:22 empty:13 empty:4, top blocked by opponent
     setup_pieces(black, {53});
     setup_pieces(white, {26, 35, 44});
     if (count_threes(white) != 1) return false;
