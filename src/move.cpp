@@ -14,6 +14,8 @@ void undo_move (int move) {
 }
 
 move_list get_legal_moves () {
+    static constexpr int columns[] = {4, 5, 3, 6, 2, 7, 1, 8, 0, 9};
+
     move_list moves;
 
     if (count_fives(white) > 0 || count_fives(black) > 0) {
@@ -24,7 +26,7 @@ move_list get_legal_moves () {
         return moves;
     }
 
-    for (int c = 0; c < 10; c++) {
+    for (int c : columns) {
         bitboard column = (pieces[white] | pieces[black]) & move_masks[c];
         int top_piece = (column) ? getlsb(column) : 100 + c;
 
