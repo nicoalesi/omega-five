@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_options(-Wall -Wextra -O3)
+add_compile_options(-Wall -Wextra -O3 -march=native)
 
 option(ENABLE_TESTS "Build the testing executable" OFF)
 
@@ -14,10 +14,10 @@ add_library(omega_five_core
     src/bitboard.cpp
     src/board.cpp
     src/debug.cpp
-    src/evaluation.cpp
     src/interface.cpp
     src/move.cpp
     src/search.cpp
+    src/nnue/nnue.cpp
 )
 
 target_include_directories(omega_five_core PUBLIC include/omega-five)

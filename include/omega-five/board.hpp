@@ -4,6 +4,7 @@
 
 #include "bitboard.hpp"
 #include "common.hpp"
+#include "nnue/nnue.hpp"
 
 extern bitboard pieces[2];
 extern int stm;

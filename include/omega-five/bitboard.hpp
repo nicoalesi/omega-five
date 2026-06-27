@@ -14,7 +14,7 @@ extern bitboard not_c3_mask;
 extern bitboard not_c4_mask;
 extern bitboard not_c5_mask;
 
-void init ();
+void init_bitboards ();
 
 ALWAYS_INLINE void setbit (bitboard &board, int index) {
     board |= ((bitboard)1 << index);

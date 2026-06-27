@@ -2,8 +2,9 @@
 
 void make_move (int move) {
     setbit(pieces[stm], move);
-    stm ^= 1;
     ply_count++;
+    update_accumulators(move, ply_count, stm);
+    stm ^= 1;
 }
 
 void undo_move (int move) {

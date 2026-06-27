@@ -42,12 +42,16 @@ void set_position (std::string pos) {
 
         if (c == 'w') {
             setbit(pieces[white], i);
+            ply_count++;
+            update_accumulators(i, ply_count, white);
             i++;
             continue;
         }
 
         if (c == 'b') {
             setbit(pieces[black], i);
+            ply_count++;
+            update_accumulators(i, ply_count, black);
             i++;
             continue;
         }

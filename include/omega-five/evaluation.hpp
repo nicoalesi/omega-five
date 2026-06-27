@@ -3,43 +3,29 @@
 #include "bitboard.hpp"
 #include "board.hpp"
 #include "common.hpp"
+#include "nnue/nnue.hpp"
 #include "pattern.hpp"
 
-extern const int WEIGHTS[10][10];
-
-extern const int FIVES_SCORE;
-extern const int OPEN_FOURS_SCORE;
-extern const int FOURS_SCORE;
-extern const int THREES_SCORE;
-
-ALWAYS_INLINE int evaluate_side (int side) {
-    int score = 0;
-
-    score += count_fives(side) * FIVES_SCORE;
-
-    if (score > 0) {
-        return score;
-    }
-
-    if (ply_count == 100) {
-        return 0;
-    }
-
-    score += count_open_fours(side) * OPEN_FOURS_SCORE;
-    score += count_fours(side) * FOURS_SCORE;
-    score += count_threes(side) * THREES_SCORE;
-
-    bitboard pieces_copy = pieces[side];
-
-    while (pieces_copy) {
-        int index = getlsb(pieces_copy);;
-        score += WEIGHTS[index / 10][index % 10];
-        popbit(pieces_copy, index);
-    }
-
-    return score;
-}
-
 ALWAYS_INLINE int evaluate () {
-    return evaluate_side(stm) - (evaluate_side(!stm) * 12) / 10;
+    int8_t hl1_output[HIDDEN_L1_SIZE];
+    for (int i = 0; i < HIDDEN_L1_SIZE; i++) {
+        hl1_output[i] = activation(acc_stack[ply_count][stm][i], HIDDEN_L1_SHIFT);
+    }
+
+    int32_t hl2_output[HIDDEN_L2_SIZE];
+    for (int i = 0; i < HIDDEN_L2_SIZE; i++) {
+        int32_t sum = model.hl2_biases[i];
+        for (int j = 0; j < HIDDEN_L1_SIZE; j++) {
+            sum += hl1_output[j] * model.hl2_weights[i * HIDDEN_L1_SIZE + j];
+        }
+
+        hl2_output[i] = activation(sum, HIDDEN_L2_SHIFT);
+    }
+
+    int32_t output = model.ol_bias;
+    for (int i = 0; i < HIDDEN_L2_SIZE; i++) {
+        output += hl2_output[i] * model.ol_weights[i];
+    }
+
+    return output >> OUTPUT_SHIFT;
 }

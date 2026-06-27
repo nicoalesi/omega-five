@@ -89,7 +89,7 @@ void generate_move_masks () {
     }
 }
 
-void init () {
+void init_bitboards () {
     generate_eval_masks();
     generate_block_masks();
     generate_move_masks();

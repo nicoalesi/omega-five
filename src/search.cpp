@@ -1,6 +1,6 @@
 #include "search.hpp"
 
-const int MAX_DEPTH = 30;
+constexpr const int MAX_DEPTH = 30;
 
 int negamax (int depth, int alpha, int beta) {
     if (depth == 0) {
