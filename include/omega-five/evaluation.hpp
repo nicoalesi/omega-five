@@ -7,6 +7,14 @@
 #include "pattern.hpp"
 
 ALWAYS_INLINE int evaluate () {
+    if (count_fives(stm)) {
+        return 10000;
+    }
+
+    if (count_fives(!stm)) {
+        return -10000;
+    }
+
     int8_t hl1_output[HIDDEN_L1_SIZE];
     for (int i = 0; i < HIDDEN_L1_SIZE; i++) {
         hl1_output[i] = activation(acc_stack[ply_count][stm][i], HIDDEN_L1_SHIFT);

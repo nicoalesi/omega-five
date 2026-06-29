@@ -7,7 +7,7 @@
 #include "common.hpp"
 
 constexpr const int INPUT_SIZE = 200;
-constexpr const int HIDDEN_L1_SIZE = 256;
+constexpr const int HIDDEN_L1_SIZE = 1024;
 constexpr const int HIDDEN_L2_SIZE = 64;
 
 constexpr const int HIDDEN_L1_SHIFT = 20;
