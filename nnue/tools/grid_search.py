@@ -13,10 +13,25 @@ from torch.utils.data import TensorDataset, DataLoader
 
 
 K = 0.00063
+W = 0.9
+WD = 0.1
+
 SEED = 42
+EPOCHS = 1
 
 
 def save_summary (loss_summary):
+    """
+    Save cross-validation training and validation losses to a text file.
+
+    The output file contains the losses for every combination of
+    network configuration, fold, and training epoch.
+
+    :param list loss_summary:
+        Nested list of training and validation losses organized as
+        ``[configuration][fold][epoch]``.
+    """
+
     with open("gkf_cv_loss_summary.txt", "w") as f:
         for config_idx, config_losses in enumerate(loss_summary):
             f.write(f"Configuration {config_idx + 1}\n\n")
@@ -38,6 +53,11 @@ def save_summary (loss_summary):
     
 
 def main ():
+    """
+    Perform grid search using Group K-fold cross-validation for multiple NNUE architectures.
+    Save a summary of the result in a text file.
+    """
+
     configs = [
         {"input_features": 200, "l1_size": 256, "l2_size": 64, "lr": 0.00005},
         {"input_features": 200, "l1_size": 512, "l2_size": 32, "lr": 0.00005},
@@ -48,7 +68,7 @@ def main ():
 
     gkf = GroupKFold()
     dataset = Dataset()
-    dataset.set("training.bin", 30)
+    dataset.set("training.bin")
     Xs, Ys = dataset.get()
 
     loss_summary = []
@@ -56,7 +76,7 @@ def main ():
     for config in configs:
         config_losses = []
 
-        for fold, data,  in enumerate(gkf.split(Xs, Ys)):
+        for fold, data in enumerate(gkf.split(Xs, Ys)):
             fold_losses = []
 
             torch.manual_seed(SEED + fold)
@@ -72,13 +92,10 @@ def main ():
                 l2_size = config["l2_size"]
             )
 
-            criterion = Loss(k = K, w = 0.7)
-            adjusted_lr = config["lr"] / K
-            adjusted_decay = 0.01 * K
-            optimizer = AdamW(model.parameters(), lr = adjusted_lr, weight_decay = adjusted_decay)
+            criterion = Loss(k = K, w = W)
+            optimizer = AdamW(model.parameters(), lr = config["lr"], weight_decay = WD)
 
-            epochs = 3
-            for epoch in range(epochs):
+            for epoch in range(EPOCHS):
                 model.train()
                 train_loss = 0.0
 

@@ -3,10 +3,40 @@ import torch
 
 
 class GroupKFold ():
+    """
+    Group-aware K-Fold cross-validator.
+
+    Splits data into ``n_splits`` folds while ensuring that observations from the
+    same group remain together. Groups are assigned to folds greedily to keep
+    the total number of samples in each fold as balanced as possible.
+
+    :ivar int n_splits: Number of folds used for cross-validation.
+    """
+
     def __init__ (self, n_splits = 5):
+        """
+        Initialize the cross-validator.
+
+        :param int n_splits: Number of folds to generate.
+        """
+
         self.n_splits = n_splits
     
     def split (self, Xs, Ys):
+        """
+        Generate train-test splits for grouped data.
+
+        Each element of ``Xs`` and ``Ys`` is a set of observations from one group. All samples
+        belonging to the same group are assigned to the same fold.
+
+        :param list[torch.Tensor] Xs: Feature tensors, one tensor per group.
+        :param list[torch.Tensor] Ys: Target tensors, one tensor per group.
+
+        :yield tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+            A tuple ``(X_train, Y_train, X_test, Y_test)`` containing the
+            concatenated training and testing tensors for each fold.
+        """
+
         counts = [X.shape[0] for X in Xs]
 
         if self.n_splits > len(Xs):

@@ -3,16 +3,43 @@ import torch
 
 
 class Dataset ():
-    def __init__ (self):
-        self.filepath = None
-        self.chunk_size = None
+    """
+    Dataset loader for binary-encoded game data.
 
-    def set (self, filepath, chunk_size):
+    Reads a binary dataset in which each record represents a game position,
+    groups positions by game ID, and returns the data as lists of
+    PyTorch tensors (one tensor per game).
+
+    :ivar str filepath: Path to the binary dataset file.
+    """
+
+    def __init__ (self):
+        """
+        Initialize an empty dataset loader.
+        """
+
+        self.filepath = None
+
+    def set (self, filepath):
+        """
+        Configure the dataset source.
+
+        :param str filepath: Path to the binary dataset file.
+        """
+
         self.filepath = filepath
-        self.chunk_size = chunk_size
 
     def get (self):
-        if self.filepath is None or self.chunk_size is None:
+        """
+        Load the dataset from the configured file.
+
+        :return tuple[list[torch.Tensor], list[torch.Tensor]] | None:
+            A tuple ``(positions, labels)``, where each list contains one
+            tensor per game. Returns ``None`` if the dataset has not been
+            configured.
+        """
+
+        if self.filepath is None:
             return None
         
         tot_positions = []
@@ -30,7 +57,7 @@ class Dataset ():
                 next_labels = []
 
                 while True:
-                    chunk = file.read(self.chunk_size)
+                    chunk = file.read(30)
                     if not chunk:
                         data_left = False
                         break
@@ -55,6 +82,17 @@ class Dataset ():
         return tot_positions, tot_labels
 
     def _unpack_chunk (self, chunk):
+        """
+        Decode a single binary record.
+
+        :param bytes chunk: Binary record of size 30.
+
+        :return tuple[int, numpy.ndarray, int, float]:
+            A tuple ``(game_id, position, score, outcome)`` containing the
+            decoded game ID, bit-vector representation of the board,
+            evaluation score, and game outcome.
+        """
+
         game_id = int.from_bytes(chunk[0:2], "little", signed = True)
         pos = self._bits_to_vec(chunk[2:27])
         score = int.from_bytes(chunk[27:29], "little", signed = True)
@@ -63,4 +101,12 @@ class Dataset ():
         return game_id, pos, score, outcome
     
     def _bits_to_vec (self, chunk):
+        """
+        Convert packed board bits into a binary vector.
+
+        :param bytes chunk: Packed binary representation of a board position.
+
+        :return numpy.ndarray: A one-dimensional array containing the unpacked bits.
+        """
+
         return np.unpackbits(np.frombuffer(chunk, dtype = np.uint8))
