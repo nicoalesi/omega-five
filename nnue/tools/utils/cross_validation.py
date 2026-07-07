@@ -39,9 +39,9 @@ class GroupKFold ():
                     train_Xs.extend(X_folds[idx])
                     train_Ys.extend(Y_folds[idx])
             
-            X_train = torch.cat(train_Xs, dim = 0)
-            Y_train = torch.cat(train_Ys, dim = 0)
-            X_test = torch.cat(test_Xs, dim = 0)
-            Y_test = torch.cat(test_Ys, dim = 0)
+            X_train = torch.cat(train_Xs)
+            Y_train = torch.cat(train_Ys)
+            X_test = torch.cat(test_Xs)
+            Y_test = torch.cat(test_Ys)
             
             yield X_train, Y_train, X_test, Y_test
