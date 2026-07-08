@@ -41,7 +41,7 @@ int search_best_move (int depth) {
     for (int i = 0; i < moves.size; i++) {
         int move = moves[i];
         make_move(move);
-        int val = -negamax(depth, -beta, -alpha);
+        int val = -negamax(depth - 1, -beta, -alpha);
         undo_move(move);
 
         if (val > max_val) {
