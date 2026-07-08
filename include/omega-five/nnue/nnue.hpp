@@ -14,7 +14,7 @@ constexpr const int HIDDEN_L1_SHIFT = 20;
 constexpr const int HIDDEN_L2_SHIFT = 7;
 constexpr const int OUTPUT_SHIFT = 7;
 
-constexpr const int STACK_DEPTH = 100;
+constexpr const int STACK_DEPTH = 101;
 
 struct alignas(64) NNUE {
     // Hidden layer 1 (Feature transformer)
