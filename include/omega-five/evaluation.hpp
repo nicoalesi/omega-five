@@ -8,11 +8,11 @@
 
 ALWAYS_INLINE int evaluate () {
     if (count_fives(stm)) {
-        return 10000;
+        return 150000;
     }
 
     if (count_fives(!stm)) {
-        return -10000;
+        return -150000;
     }
 
     int8_t hl1_output[HIDDEN_L1_SIZE];
